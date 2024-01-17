@@ -21,7 +21,7 @@ const adminSchema = new Schema<IAdmin>(
     permissions: [
       {
         type: String,
-        enum: ['create', 'edit', 'delete'],
+        enum: ['create', 'edit', 'delete', 'read'],
         required: true
       },
     ],
