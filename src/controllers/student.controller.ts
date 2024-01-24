@@ -11,8 +11,14 @@ export const registerStudent = async (
 
   try {
     const existUser: IStudent | null = await Student.findOne({ email });
+    const existUsername: IStudent | null = await Student.findOne({ username });
     if (existUser) {
-      res.status(400).json(["El correo registrado ya existe"]);
+      res.status(400).json(["El correo ingresado ya existe"]);
+      return;
+    }
+
+    if (existUsername) {
+      res.status(400).json(["El nombre de usuario ingresado ya existe"]);
       return;
     }
 
@@ -34,12 +40,8 @@ export const registerStudent = async (
 
     res.json({
       message: "Se ha creado el usuario, correctamente",
-      id: userSaved._id,
-      firstName: userSaved.firstName,
-      lastName: userSaved.lastName,
-      username: userSaved.username,
-      email: userSaved.email,
-      password: userSaved.password,
+      ...JSON.parse(JSON.stringify(userSaved)),
+      password: undefined
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -71,11 +73,8 @@ export const LoginStudent = async (
 
     res.json({
       message: "Se ha realizado el Login, correctamente",
-      id: studentFound._id,
-      firstName: studentFound.firstName,
-      lastName: studentFound.lastName,
-      username: studentFound.username,
-      email: studentFound.email,
+      ...JSON.parse(JSON.stringify(studentFound)),
+      password: undefined
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
