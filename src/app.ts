@@ -7,6 +7,8 @@ import StudentRoute from './routes/Student.routes'
 import AdminRoute from './routes/Admin.routes';
 import UsersRoute from './routes/UsersF.routes';
 import ClassRoute from './routes/Class.routes';
+import SectionRoute from './routes/Section.routes';
+import QuizRoute from './routes/Quiz.routes';
 
 
 
@@ -38,6 +40,8 @@ app.use("/api", StudentRoute);
 app.use("/api", AdminRoute);
 app.use("/api", UsersRoute);
 app.use("/api", ClassRoute);
+app.use("/api", QuizRoute);
+app.use("/api", SectionRoute)
 
 // ****************************************************************************
 // 										          

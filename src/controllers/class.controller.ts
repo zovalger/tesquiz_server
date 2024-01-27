@@ -2,48 +2,55 @@ import { Request, Response } from "express";
 
 import Admin, { IAdmin } from "../models/admin.model";
 
-import Section, {ISection} from "../models/section.model";
+import Section  from "../models/section.model";
 
-// import Class, {IClass} from "../models/class.model";
+import Class, {IClass} from "../models/class.model";
 
-export const createSection =async (req: Request, res: Response):Promise<void> => {
-    const {title, order} = req.body;
+export const createClass = async (req: Request, res: Response):Promise<void> => {
+  const {title, content, section_id} = req.body;
 
-    try {
+  try {
 
-        const loggedInUserId = req.user?.id;
+      const loggedInUserId = req.user?.id;
 
-        const isAdmin: IAdmin | null = await Admin.findById(loggedInUserId);
+      const isAdmin: IAdmin | null = await Admin.findById(loggedInUserId);
 
-        if (!isAdmin) {
-            res.status(401).json({ message: "Usuario no autorizado"});
-            return;
-          }
-      
-          if (isAdmin.role !== "Admin") {
-            res.status(401).json({ message: "Usuario no autorizado" });
-            return;
-          }
-      
-          if (!isAdmin.permissions.includes("create")) {
-            res.status(401).json({ message: "No tienes permisos para crear una sección" });
-            return;
-          }
+      if (!isAdmin) {
+          res.status(401).json({ message: "Usuario no autorizado"});
+          return;
+        }
+    
+        if (isAdmin.role !== "Admin") {
+          res.status(401).json({ message: "Usuario no autorizado" });
+          return;
+        }
+    
+        if (!isAdmin.permissions.includes("create")) {
+          res.status(401).json({ message: "No tienes permisos para crear una clase" });
+          return;
+        }
 
-        const newSection: ISection = new Section({
-            title,
-            order
-        })
+        const section = await Section.findOne({order: section_id});
 
-        const Saved: ISection = await newSection.save();
+        const existClass = await Class.find({section_id: section}).sort({ order: -1 });
 
-        res.json({ 
-            message: "Sección Guardada",
-            title: Saved.title,
-            order: Saved.order
-        })
+        const orderClass = existClass.length > 0 ? existClass[0].order + 1 : 1;
 
-    } catch (error: any) {
-        res.status(500).json({ message: error.message })
-    }
+      const newClass: IClass = new Class({
+          title,
+          order: orderClass,
+          content,
+          section_id: section 
+      })
+
+      const Saved: IClass = await newClass.save();
+
+      res.json({ 
+          message: "Clase Guardada",
+          ...JSON.parse(JSON.stringify(Saved))
+      })
+
+  } catch (error: any) {
+      res.status(500).json({ message: error.message })
+  }
 }

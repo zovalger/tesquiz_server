@@ -3,14 +3,14 @@ import Admin from "./admin.model";
 
 export interface ISection extends Document {
   title: string;
-  order: string;
+  order: number;
   created: object;
 }
 
 const sectionSchema = new Schema<ISection>(
   {
     title: { type: String, required: true },
-    order: { type: String, required: true },
+    order: { type: Number, required: true },
     created: {
       type: mongoose.Schema.Types.ObjectId,
       ref: Admin,

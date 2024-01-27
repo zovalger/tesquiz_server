@@ -1,11 +1,13 @@
 import mongoose, { Document, Schema, model } from "mongoose";
 import Admin from "./admin.model";
+import Section from "./section.model";
 
 export interface IClass extends Document {
   title: string;
-  order: Number;
+  order: number;
   content: Array<string>;
-  created: object;
+  created: mongoose.Schema.Types.ObjectId;
+  section_id: mongoose.Schema.Types.ObjectId
 }
 
 const classSchema = new Schema<IClass>(
@@ -22,6 +24,10 @@ const classSchema = new Schema<IClass>(
       type: mongoose.Schema.Types.ObjectId,
       ref: Admin,
     },
+    section_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: Section
+    }
   },
   { timestamps: true }
 );
