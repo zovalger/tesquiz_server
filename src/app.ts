@@ -9,7 +9,7 @@ import UsersRoute from './routes/UsersF.routes';
 import ClassRoute from './routes/Class.routes';
 import SectionRoute from './routes/Section.routes';
 import QuizRoute from './routes/Quiz.routes';
-
+import Report from './routes/ReportClass.routes';
 
 
 // ****************************************************************************
@@ -42,6 +42,7 @@ app.use("/api", UsersRoute);
 app.use("/api", ClassRoute);
 app.use("/api", QuizRoute);
 app.use("/api", SectionRoute)
+app.use("/api", Report)
 
 // ****************************************************************************
 // 										          

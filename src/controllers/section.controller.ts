@@ -1,36 +1,21 @@
 import { Request, Response } from "express";
 
-import Admin, { IAdmin } from "../models/admin.model";
-
 import Section, {ISection} from "../models/section.model";
 
+import { createElement } from "../services/logbookService";
+
+import { AuthCreateClassPermission } from "../services/classService";
 
 export const createSection =async (req: Request, res: Response):Promise<void> => {
     const {title} = req.body;
 
     try {
 
-        const loggedInUserId = req.user?.id;
-
-        const isAdmin: IAdmin | null = await Admin.findById(loggedInUserId);
-
+        
+        await AuthCreateClassPermission(req, res)
 
         const allSection = await Section.find().sort({ order: -1 });
 
-        if (!isAdmin) {
-            res.status(401).json({ message: "Usuario no autorizado"});
-            return;
-          }
-      
-          if (isAdmin.role !== "Admin") {
-            res.status(401).json({ message: "Usuario no autorizado" });
-            return;
-          }
-      
-          if (!isAdmin.permissions.includes("create")) {
-            res.status(401).json({ message: "No tienes permisos para crear una sección" });
-            return;
-          }
 
           const orderSection =  (allSection.length > 0) ? allSection[0].order + 1 : 1
 
@@ -39,8 +24,13 @@ export const createSection =async (req: Request, res: Response):Promise<void> =>
             order: orderSection
         })
 
+        const userId = req.user.id;
+        await createElement("createSection", "create", userId);
+
+
         const Saved: ISection = await newSection.save();
 
+      
         res.json({ 
             message: "Sección Guardada",
             ...JSON.parse(JSON.stringify(Saved))
@@ -48,5 +38,30 @@ export const createSection =async (req: Request, res: Response):Promise<void> =>
 
     } catch (error: any) {
         res.status(500).json({ message: error.message })
+    }
+}
+
+export const sections = async (_req: Request, res: Response) => {
+    try {
+        const sections = await Section.find();
+        res.status(200).json(sections) 
+    } catch (error:any) {
+        res.status(500).json({ message: error.message})
+    }
+}
+
+export const section = async (req: Request, res: Response) => {
+    try {
+        const section = await Section.findById(req.params.id)
+
+        if(!section){
+            res.status(400).json({ message: "no se encontro la sección" })
+            return
+        }
+
+        res.status(200).json(section) 
+        
+    } catch (error:any) {
+        res.status(500).json({ message: error.message})
     }
 }

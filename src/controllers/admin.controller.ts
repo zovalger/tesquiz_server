@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
+
 import { createAccessToken } from "../libs/jwt";
 
+import { createElement } from "../services/logbookService";
+
 import Admin, { IAdmin } from "../models/admin.model";
+
 
 export const registerAdmin = async (
   req: Request,
@@ -34,6 +38,11 @@ export const registerAdmin = async (
       password: passwordHash,
       permissions,
     });
+
+    const userId = req.user?.id;
+
+    await createElement("registerAdmin", "create", userId);
+
 
     const userSaved: IAdmin = await newAdmin.save();
 

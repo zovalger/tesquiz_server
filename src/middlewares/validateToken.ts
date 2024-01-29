@@ -2,12 +2,13 @@ import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express"; // Importa los tipos de Request, Response y NextFunction de Express
 import { TOKEN_SECRET } from "../config";
 
-declare module "express" {
-  interface Request {
-    user?: any;
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: string }; 
+    }
   }
 }
-
 export const authRequired = (
   req: Request,
   res: Response,

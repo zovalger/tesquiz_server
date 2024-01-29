@@ -1,34 +1,18 @@
 import { Request, Response } from "express";
 
-
-
-import Admin, { IAdmin } from "../models/admin.model";
 import Quiz, { IQuiz } from "../models/quiz.model";
 import Class from "../models/class.model";
+
+import { createElement } from "../services/logbookService";
+
+import { AuthCreateClassPermission } from "../services/classService";
 
 export const createQuiz = async (req: Request, res: Response) => {
    const {text, correct, incorrect, time, class_id} = req.body;
    
     try {
 
-        const loggedInUserId = req.user?.id;
-
-        const isAdmin: IAdmin | null = await Admin.findById(loggedInUserId);
-  
-        if (!isAdmin) {
-            res.status(401).json({ message: "Usuario no autorizado"});
-            return;
-          }
-      
-          if (isAdmin.role !== "Admin") {
-            res.status(401).json({ message: "Usuario no autorizado" });
-            return;
-          }
-      
-          if (!isAdmin.permissions.includes("create")) {
-            res.status(401).json({ message: "No tienes permisos para crear una clase" });
-            return;
-          }
+          await AuthCreateClassPermission(req, res);
 
           const classFind = await Class.findOne({ _id: class_id  });
 
@@ -40,6 +24,11 @@ export const createQuiz = async (req: Request, res: Response) => {
             time, 
             class_id: classFind 
         })
+
+          
+      const userId = req.user.id;
+      await createElement("createQuiz", "create", userId);
+
 
         const Saved: IQuiz = await newQuiz.save()
 

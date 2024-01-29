@@ -1,34 +1,19 @@
 import { Request, Response } from "express";
 
-import Admin, { IAdmin } from "../models/admin.model";
-
 import Section  from "../models/section.model";
 
 import Class, {IClass} from "../models/class.model";
+
+import { createElement } from "../services/logbookService";
+
+import { AuthCreateClassPermission } from "../services/classService";
 
 export const createClass = async (req: Request, res: Response):Promise<void> => {
   const {title, content, section_id} = req.body;
 
   try {
 
-      const loggedInUserId = req.user?.id;
-
-      const isAdmin: IAdmin | null = await Admin.findById(loggedInUserId);
-
-      if (!isAdmin) {
-          res.status(401).json({ message: "Usuario no autorizado"});
-          return;
-        }
-    
-        if (isAdmin.role !== "Admin") {
-          res.status(401).json({ message: "Usuario no autorizado" });
-          return;
-        }
-    
-        if (!isAdmin.permissions.includes("create")) {
-          res.status(401).json({ message: "No tienes permisos para crear una clase" });
-          return;
-        }
+       await AuthCreateClassPermission(req, res);
 
         const section = await Section.findOne({order: section_id});
 
@@ -43,6 +28,10 @@ export const createClass = async (req: Request, res: Response):Promise<void> => 
           section_id: section 
       })
 
+
+      const userId = req.user.id;
+      await createElement("createClass", "create", userId);
+
       const Saved: IClass = await newClass.save();
 
       res.json({ 
@@ -53,4 +42,22 @@ export const createClass = async (req: Request, res: Response):Promise<void> => 
   } catch (error: any) {
       res.status(500).json({ message: error.message })
   }
+}
+
+export const classes =async (req: Request, res: Response) => {
+    try {
+        const classes = await Class.find({section_id: req.params.id}).sort({order: 1});
+        res.status(200).json(classes) 
+    } catch (error:any) {
+        res.status(500).json({ message: error.message} ) 
+    }
+}
+
+export const getClass =async (req: Request, res: Response) => {
+    try {
+        const getclass = await Class.findById(req.params.id)
+        res.status(200).json(getclass); 
+    } catch (error:any) {
+        res.status(500).json({ message: error.message} ) 
+    }
 }

@@ -23,7 +23,8 @@ const quizSchema = new Schema<IQuiz>(
             type: mongoose.Schema.Types.ObjectId,
             ref: Class
         }
-    }
+    },
+    { timestamps: true }
 )
 
 const Quiz = model<IQuiz>("quiz", quizSchema)
