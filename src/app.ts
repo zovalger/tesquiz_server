@@ -10,6 +10,7 @@ import ClassRoute from './routes/Class.routes';
 import SectionRoute from './routes/Section.routes';
 import QuizRoute from './routes/Quiz.routes';
 import Report from './routes/ReportClass.routes';
+import morgan from "morgan";
 
 
 // ****************************************************************************
@@ -19,7 +20,7 @@ import Report from './routes/ReportClass.routes';
 const app = express();
 
 app.use(cors());
-
+app.use(morgan("dev"))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
