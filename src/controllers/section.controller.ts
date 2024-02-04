@@ -4,7 +4,7 @@ import Section, {ISection} from "../models/section.model";
 
 import { createElement } from "../services/logbookService";
 
-import { AuthCreateClassPermission } from "../services/classService";
+import { AuthClassPermission } from "../services/classService";
 
 export const createSection =async (req: Request, res: Response):Promise<void> => {
     const {title} = req.body;
@@ -12,7 +12,7 @@ export const createSection =async (req: Request, res: Response):Promise<void> =>
     try {
 
         
-        await AuthCreateClassPermission(req, res)
+        await AuthClassPermission(req, res)
 
         const allSection = await Section.find().sort({ order: -1 });
 

@@ -7,6 +7,9 @@ import { createElement } from "../services/logbookService";
 
 import Admin, { IAdmin } from "../models/admin.model";
 
+import { AuthAdminPermissions } from "../services/adminService";
+
+
 
 export const registerAdmin = async (
   req: Request,
@@ -16,6 +19,9 @@ export const registerAdmin = async (
     req.body;
 
   try {
+
+    await AuthAdminPermissions(req, res)
+
     const existUser: IAdmin | null = await Admin.findOne({ email });
     const existUsername: IAdmin | null = await Admin.findOne({ username });
 
@@ -28,6 +34,11 @@ export const registerAdmin = async (
       res.status(400).json(["El nombre de usuario ingresado ya existe"]);
       return;
     }
+
+    const userId = req.user?.id;
+
+    await createElement("registerAdmin", "create", userId);
+
     const passwordHash = await bcryptjs.hash(password, 10);
 
     const newAdmin: IAdmin = new Admin({
@@ -39,16 +50,12 @@ export const registerAdmin = async (
       permissions,
     });
 
-    const userId = req.user?.id;
-
-    await createElement("registerAdmin", "create", userId);
-
-
     const userSaved: IAdmin = await newAdmin.save();
 
     const token = await createAccessToken({ id: userSaved._id })
 
     res.cookie("token", token)
+
     res.json({
       message: "Se ha creado el usuario, correctamente",
       ...JSON.parse(JSON.stringify(userSaved)),
@@ -80,6 +87,7 @@ export const loginAdmin = async (req: Request, res: Response) => {
     const token = await createAccessToken({ id: userFound._id });
 
     res.cookie("token", token)
+
     res.json({
       message: "Usuario logueado correctamente",
       ...JSON.parse(JSON.stringify(userFound)),

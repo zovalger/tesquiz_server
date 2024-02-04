@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config";
 
-import Admin, {IAdmin} from "../models/admin.model";
-import Student, {IStudent} from '../models/student.model';
+import Admin from "../models/admin.model";
+import Student from '../models/student.model';
 
 export const logout = async (_req: Request, res: Response ) => {
     try{
@@ -99,34 +99,3 @@ export const logout = async (_req: Request, res: Response ) => {
   }
 
 
-  export const editUser = async (req: Request, res: Response) => {
-    try {
-    
-
-      if (req.body.password) {
-        delete req.body.password;
-      }
-
-      if (req.body.permissions.length == 0) {
-        res.status(400).json(["El array de permisos no debe contener valores vacíos"]);
-        return;
-      }
-
-      const AdminFound = await Admin.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-      });
-      const StudentFound = await Student.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-      });
-
-      const userEditing: IAdmin | IStudent | null   = AdminFound?.role == "Admin" ? AdminFound : StudentFound?.role == "Student" ? StudentFound : null
-
-      if(!userEditing){
-        res.json({ message: "El usuario no ha sido encontrado"});
-        return
-      }
-      res.json(userEditing);
-    } catch (error: any) {
-      res.status(500).json({ message: error.message})
-    }
-  }

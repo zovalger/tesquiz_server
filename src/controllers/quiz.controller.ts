@@ -5,14 +5,14 @@ import Class from "../models/class.model";
 
 import { createElement } from "../services/logbookService";
 
-import { AuthCreateClassPermission } from "../services/classService";
+import { AuthClassPermission } from "../services/classService";
 
 export const createQuiz = async (req: Request, res: Response) => {
    const {text, correct, incorrect, time, class_id} = req.body;
    
     try {
 
-          await AuthCreateClassPermission(req, res);
+          await AuthClassPermission(req, res);
 
           const classFind = await Class.findOne({ _id: class_id  });
 
@@ -39,5 +39,14 @@ export const createQuiz = async (req: Request, res: Response) => {
 
     } catch (error: any) {
         res.status(500).json({ message: error.message})
+    }
+}
+
+export const quizzes = async (req: Request, res: Response) => {
+    try {
+        const quizzes = await Quiz.findOne({class_id: req.params.id});
+        res.status(200).json(quizzes);
+    } catch (error:any) {
+        res.status(500).json({ message: error.message })
     }
 }

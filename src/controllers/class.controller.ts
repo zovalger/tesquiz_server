@@ -6,14 +6,14 @@ import Class, {IClass} from "../models/class.model";
 
 import { createElement } from "../services/logbookService";
 
-import { AuthCreateClassPermission } from "../services/classService";
+import { AuthClassPermission } from "../services/classService";
 
 export const createClass = async (req: Request, res: Response):Promise<void> => {
   const {title, content, section_id} = req.body;
 
   try {
 
-       await AuthCreateClassPermission(req, res);
+       await AuthClassPermission(req, res);
 
         const section = await Section.findOne({order: section_id});
 
@@ -47,7 +47,7 @@ export const createClass = async (req: Request, res: Response):Promise<void> => 
 export const classes =async (req: Request, res: Response) => {
     try {
         const classes = await Class.find({section_id: req.params.id}).sort({order: 1});
-        res.status(200).json(classes) 
+        res.status(200).json(classes);
     } catch (error:any) {
         res.status(500).json({ message: error.message} ) 
     }

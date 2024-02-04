@@ -39,7 +39,7 @@ export const registerAdminValidator = [
   body("permissions")
     .notEmpty()
     .isArray({ min: 1 })
-    .isIn(["create", "edit", "delete", "read"])
+    .isIn(["Users", "Classes", "ClassReports", "Binnacle" ])
     .withMessage(
       "Es necesario por lo menos un permiso y deben cumplir con los permisos admitidos para el sistema"
     )

@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
+import morgan from "morgan";
 
 import StudentRoute from './routes/Student.routes'
 import AdminRoute from './routes/Admin.routes';
@@ -10,7 +10,7 @@ import ClassRoute from './routes/Class.routes';
 import SectionRoute from './routes/Section.routes';
 import QuizRoute from './routes/Quiz.routes';
 import Report from './routes/ReportClass.routes';
-
+import ClassFinishied from './routes/ClassFinishied.routes';
 
 // ****************************************************************************
 // 										           Inicio de App
@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+app.use(morgan("dev"))
 
 
 app.get("/", (_req, res) => {
@@ -43,6 +43,7 @@ app.use("/api", ClassRoute);
 app.use("/api", QuizRoute);
 app.use("/api", SectionRoute)
 app.use("/api", Report)
+app.use("/api", ClassFinishied)
 
 // ****************************************************************************
 // 										          
