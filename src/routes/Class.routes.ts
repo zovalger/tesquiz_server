@@ -11,7 +11,7 @@ import { createClassValidator } from "../validators/classValidator";
 
 const router = Router();
 
-router.get('/classes/section:id', authRequired, classes)
+router.get('/section/:id/classes', authRequired, classes)
 router.get('/class/:id', authRequired, getClass)
 router.post('/classes', authRequired, createClassValidator, createClass)
 
