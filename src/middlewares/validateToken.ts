@@ -3,32 +3,32 @@ import { Request, Response, NextFunction } from "express"; // Importa los tipos 
 import { TOKEN_SECRET } from "../config";
 
 declare global {
-  namespace Express {
-    interface Request {
-      user?: { id: string }; 
-    }
-  }
+	namespace Express {
+		interface Request {
+			user?: { id: string };
+		}
+	}
 }
 export const authRequired = (
-  req: Request,
-  res: Response,
-  next: NextFunction
+	req: Request,
+	res: Response,
+	next: NextFunction
 ) => {
-  const { token } = req.cookies;
+	const token = req.headers["x-access-token"];
 
-  if (!token) {
-    res.status(401).json({ message: "No token" });
-    return;
-  }
+	if (!token) {
+		res.status(401).json({ message: "No token" });
+		return;
+	}
 
-  jwt.verify(token, TOKEN_SECRET || "", (err: any, user: any) => {
-    if (err) {
-      res.status(403).json({ message: `Error: ${err}` });
-      return;
-    }
+	jwt.verify(token as string, TOKEN_SECRET || "", (err: any, user: any) => {
+		if (err) {
+			res.status(403).json({ message: `Error: ${err}` });
+			return;
+		}
 
-    req.user = user;
+		req.user = user;
 
-    next();
-  });
+		next();
+	});
 };

@@ -12,6 +12,10 @@ import QuizRoute from './routes/Quiz.routes';
 import Report from './routes/ReportClass.routes';
 import ClassFinishied from './routes/ClassFinishied.routes';
 
+
+
+
+
 // ****************************************************************************
 // 										           Inicio de App
 // ****************************************************************************
@@ -19,7 +23,7 @@ import ClassFinishied from './routes/ClassFinishied.routes';
 const app = express();
 
 app.use(cors());
-
+app.use(morgan("dev"))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
