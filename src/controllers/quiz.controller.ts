@@ -5,14 +5,13 @@ import Class from "../models/class.model";
 
 import { createElement } from "../services/logbookService";
 
-import { AuthClassPermission } from "../services/classService";
+
 
 export const createQuiz = async (req: Request, res: Response) => {
    const {text, correct, incorrect, time, class_id} = req.body;
    
     try {
 
-          await AuthClassPermission(req, res);
 
           const classFind = await Class.findOne({ _id: class_id  });
 

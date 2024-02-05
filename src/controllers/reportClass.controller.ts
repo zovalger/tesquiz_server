@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 
 import ReportClass, {IReportClass} from "../models/reportClass.model";
 
-import { AuthReadReportPermission } from "../services/reportService";
-
 export const sendReportClass =async (req: Request, res: Response) => {
     const { message } = req.body;
 
@@ -28,13 +26,12 @@ export const sendReportClass =async (req: Request, res: Response) => {
     }
 }
 
-export const reportClasses =async (req: Request, res: Response) => {
+export const reportClasses =async (_req: Request, res: Response) => {
     try {
-        AuthReadReportPermission(req, res);
         const reportClasses = await ReportClass.find();
 
         res.status(200).json(reportClasses);
     } catch (error: any) {
-        
+        res.status(500).json({ message: error.message })
     }
 }

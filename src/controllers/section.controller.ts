@@ -4,15 +4,13 @@ import Section, {ISection} from "../models/section.model";
 
 import { createElement } from "../services/logbookService";
 
-import { AuthClassPermission } from "../services/classService";
+
 
 export const createSection =async (req: Request, res: Response):Promise<void> => {
     const {title} = req.body;
 
     try {
 
-        
-        await AuthClassPermission(req, res)
 
         const allSection = await Section.find().sort({ order: -1 });
 
@@ -60,6 +58,32 @@ export const section = async (req: Request, res: Response) => {
         }
 
         res.status(200).json(section) 
+        
+    } catch (error:any) {
+        res.status(500).json({ message: error.message})
+    }
+}
+
+export const deleteSection = async (req: Request, res: Response) => {
+    try {
+
+        const section = await Section.findById(req.params.id)
+
+        if(!section){
+            res.status(400).json({ message: "no se encontro la sección" })
+            return
+        }
+        const deletedOrder = section.order;
+
+      
+        await Section.updateMany(
+            { order: { $gt: deletedOrder } },
+            { $inc: { order: -1 } }
+          );
+
+         await Section.deleteOne({ _id: section._id });
+
+        res.status(200).json({ message: "Sección eliminada correctamente"}) 
         
     } catch (error:any) {
         res.status(500).json({ message: error.message})

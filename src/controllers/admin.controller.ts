@@ -7,9 +7,6 @@ import { createElement } from "../services/logbookService";
 
 import Admin, { IAdmin } from "../models/admin.model";
 
-import { AuthAdminPermissions } from "../services/adminService";
-
-
 
 export const registerAdmin = async (
 	req: Request,
@@ -20,7 +17,7 @@ export const registerAdmin = async (
 
   try {
 
-    await AuthAdminPermissions(req, res)
+
 
     const existUser: IAdmin | null = await Admin.findOne({ email });
     const existUsername: IAdmin | null = await Admin.findOne({ username });

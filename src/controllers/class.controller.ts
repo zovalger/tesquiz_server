@@ -6,14 +6,11 @@ import Class, {IClass} from "../models/class.model";
 
 import { createElement } from "../services/logbookService";
 
-import { AuthClassPermission } from "../services/classService";
 
 export const createClass = async (req: Request, res: Response):Promise<void> => {
   const {title, content, section_id} = req.body;
 
   try {
-
-       await AuthClassPermission(req, res);
 
         const section = await Section.findOne({order: section_id});
 
@@ -25,7 +22,7 @@ export const createClass = async (req: Request, res: Response):Promise<void> => 
           title,
           order: orderClass,
           content,
-          section_id: section 
+          section_id: section?.id 
       })
 
 
