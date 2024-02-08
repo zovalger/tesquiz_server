@@ -5,6 +5,7 @@ export interface Ilogbook extends Document {
   place: string;
   type: string;
   by: mongoose.Schema.Types.ObjectId;
+  object: object;
 }
 
 const logbookSchema = new Schema<Ilogbook>(
@@ -15,6 +16,7 @@ const logbookSchema = new Schema<Ilogbook>(
       type: mongoose.Schema.Types.ObjectId,
       ref: Admin,
     },
+    object: { type: Object, required: true}
   },
   { timestamps: true }
 );

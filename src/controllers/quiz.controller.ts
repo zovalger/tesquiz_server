@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import Quiz, { IQuiz } from "../models/quiz.model";
 import Class from "../models/class.model";
 
-import { createElement } from "../services/logbookService";
+// import { createElement } from "../services/logbookService";
 
 
 
@@ -25,8 +25,8 @@ export const createQuiz = async (req: Request, res: Response) => {
         })
 
           
-      const userId = req.user.id;
-      await createElement("createQuiz", "create", userId);
+    //   const userId = req.user.id;
+    //   await createElement("createQuiz", "create", userId);
 
 
         const Saved: IQuiz = await newQuiz.save()

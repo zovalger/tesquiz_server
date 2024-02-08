@@ -40,19 +40,24 @@ export const registerStudent = async (
 
 		res.json({
 			message: "Se ha creado el usuario, correctamente",
-			...JSON.parse(JSON.stringify(userSaved)),
-			password: undefined,
+			data: {
+				...JSON.parse(JSON.stringify(userSaved)), 
+				password: undefined,
+			},
       token
 		});
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
+		console.log(error);
 	}
 };
 
 export const LoginStudent = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	try {
-		const studentFound: IStudent | null = await Student.findOne({ email });
+
+	
+		const studentFound: IStudent | null = await Student.findOne(email);
 		if (!studentFound) {
 			res.status(400).json(["El correo no existe"]);
 			return;
@@ -71,11 +76,14 @@ export const LoginStudent = async (req: Request, res: Response) => {
 
 		res.json({
 			message: "Se ha realizado el Login, correctamente",
-			...JSON.parse(JSON.stringify(studentFound)),
-			password: undefined,
+			data: {
+				...JSON.parse(JSON.stringify(studentFound)), 
+				password: undefined,
+			},
 			token,
 		});
 	} catch (error: any) {
 		res.status(500).json({ message: error.message });
+		console.log(error);
 	}
 };
