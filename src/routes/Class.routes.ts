@@ -1,19 +1,34 @@
 import { Router } from "express";
 
-import { authRequired } from "../middlewares/validateToken";
-import { AuthClassPermission } from "../services/classService";
-
-import { createClass, classes, getClass } from "../controllers/class.controller";
-
-
-import { createClassValidator } from "../validators/classValidator";
-
+import {
+	createClass_controller,
+	getClasses_By_SectionId_controller,
+	getClass_By_Id_controller,
+	updateClassToDown_controller,
+	updateClassToUp_controller,
+	updateClass_controller,
+} from "../controllers/class.controller";
+import { classDataValidator } from "../validators/classValidator";
 
 const router = Router();
 
-router.get('/section/:id/classes', authRequired, classes)
-router.get('/class/:id', authRequired, getClass)
-router.post('/classes', authRequired, createClassValidator, AuthClassPermission, createClass)
+// ******************************************************
+// 							Clases
+// ******************************************************
 
+router.get("/:section_id/classes", getClasses_By_SectionId_controller);
+router.post("/:section_id/classes", classDataValidator, createClass_controller);
 
-export default router
+router.get("/:section_id/classes/:_id", getClass_By_Id_controller);
+router.put(
+	"/:section_id/classes/:_id",
+	classDataValidator,
+	updateClass_controller
+);
+router.put("/:section_id/classes/:_id/up", updateClassToUp_controller);
+router.put("/:section_id/classes/:_id/down", updateClassToDown_controller);
+
+// todo: todas las secciones con sus clases
+// router.get("/:section_id/classes", getSection_controller);
+
+export default router;

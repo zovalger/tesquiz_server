@@ -39,11 +39,12 @@ export interface TextBox {
 	type: TypeText;
 	text: string;
 }
-export interface ClassOfSection {
+export interface ClassAttributes {
 	_id: string;
 	title: string;
 	order: number;
 	content: TextBox[];
-	created: string;
 	section_id: string;
 }
+
+export interface ClassAttributes_create extends Omit<ClassAttributes, "_id"> {}

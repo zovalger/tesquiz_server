@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import Quiz, { IQuiz } from "../models/quiz.model";
-import Class from "../models/class.model";
+import ClassModel from "../models/class.model";
 
 // import { createElement } from "../services/logbookService";
 
@@ -13,7 +13,7 @@ export const createQuiz = async (req: Request, res: Response) => {
     try {
 
 
-          const classFind = await Class.findOne({ _id: class_id  });
+          const classFind = await ClassModel.findOne({ _id: class_id  });
 
 
           const newQuiz: IQuiz = new Quiz({

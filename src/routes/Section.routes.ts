@@ -1,7 +1,5 @@
 import { Router } from "express";
 
-// import { authRequired } from "../middlewares/validateToken";
-// import { AuthClassPermission } from "../services/classService";
 
 import {
 	createSection_controller,
@@ -32,12 +30,6 @@ router.post(
 
 router.get("/:_id", getSection_controller);
 
-// todo: dame las clases de la seccion
-// router.get("/:_id/classes", getSection_controller);
-
-// todo: todas las secciones con sus clases
-// router.get("/:_id/classes", getSection_controller);
-
 router.put(
 	"/:_id",
 
@@ -56,5 +48,6 @@ router.delete(
 	// No se puede eliminar la sección si posee clases
 	deleteSection_controller
 );
+
 
 export default router;

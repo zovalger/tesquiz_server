@@ -1,5 +1,5 @@
 import mongoose, { model, Schema, Document } from "mongoose";
-import Class from "./class.model";
+import ClassModel from "./class.model";
 import Student from "./student.model";
 
 export interface IFished extends Document {
@@ -23,7 +23,7 @@ const classFishedSchema = new Schema<IFished>(
         total: { type: Number, required: true},
         class_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: Class
+            ref: ClassModel
         },
         student_id: {
             type: mongoose.Schema.Types.ObjectId,

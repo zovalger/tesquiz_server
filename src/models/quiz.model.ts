@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, model  } from "mongoose";
-import Class from "./class.model";
+import ClassModel from "./class.model";
 
 export interface IQuiz extends Document {
     text: string;
@@ -21,7 +21,7 @@ const quizSchema = new Schema<IQuiz>(
         time: { type: Number, required: true},
         class_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: Class
+            ref: ClassModel
         },
     },
     { timestamps: true }

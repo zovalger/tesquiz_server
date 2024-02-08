@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { authRequired } from "../middlewares/validateToken";
-import { AuthClassPermission } from "../services/classService";
+import { AuthClassPermission } from "../services/classServicesssss";
 
 import { createQuiz, quizzes } from "../controllers/quiz.controller";
 

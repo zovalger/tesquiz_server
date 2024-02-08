@@ -1,5 +1,6 @@
 import { SectionAttributes, SectionAttributes_create } from "../../types";
 import SectionModel from "../models/section.model";
+import { getClasses_By_SectionId_service } from "./classService";
 
 export const getNextNumberOfSection_service = async (): Promise<number> => {
 	try {
@@ -144,9 +145,9 @@ export const deleteSection_service = async (_id: string) => {
 
 		if (!section) return;
 
-		// const classes = await Class.find({ section_id: section.id });
+		const classes = await getClasses_By_SectionId_service(section.id);
 
-		// if (classes.length) return
+		if (classes && classes.length) return;
 
 		const deletedOrder = section.order;
 
