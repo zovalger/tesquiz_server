@@ -57,7 +57,7 @@ export const LoginStudent = async (req: Request, res: Response) => {
 	try {
 
 	
-		const studentFound: IStudent | null = await Student.findOne(email);
+		const studentFound: IStudent | null = await Student.findOne({email});
 		if (!studentFound) {
 			res.status(400).json(["El correo no existe"]);
 			return;
