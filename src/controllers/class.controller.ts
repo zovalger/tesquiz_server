@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import Section  from "../models/section.model";
+import SectionModel  from "../models/section.model";
 
 import Class, {IClass} from "../models/class.model";
 
@@ -12,7 +12,7 @@ export const createClass = async (req: Request, res: Response):Promise<void> => 
 
   try {
 
-        const section = await Section.findOne({order: section_id});
+        const section = await SectionModel.findOne({order: section_id});
 
         const existClass = await Class.find({section_id: section}).sort({ order: -1 });
 

@@ -1,139 +1,233 @@
 import { Request, Response } from "express";
 
-import Section, { ISection } from "../models/section.model";
-import Class from "../models/class.model";
+// import Class from "../models/class.model";
+// import { createElement } from "../services/logbookService";
 
-import { createElement } from "../services/logbookService";
+import { SectionAttributes, SectionAttributes_create } from "../../types";
+import { matchedData, validationResult } from "express-validator";
+import {
+	createSection_service,
+	deleteSection_service,
+	getSection_service,
+	getSections_service,
+	updateSectionToDown_service,
+	updateSectionToUp_service,
+	updateSection_service,
+} from "../services/sectionService";
 
-export const createSection = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const { title } = req.body;
+export const createSection_controller = async (req: Request, res: Response) => {
+	const data = matchedData(req) as SectionAttributes_create;
 
-  try {
-    const allSection = await Section.find().sort({ order: -1 });
+	try {
+		const result = validationResult(req);
 
-    const orderSection = allSection.length > 0 ? allSection[0].order + 1 : 1;
+		if (result.array().length) {
+			console.log("************ errores de registro ************");
+			console.log(result.array());
+		}
 
-    const newSection: ISection = new Section({
-      title,
-      order: orderSection,
-    });
+		if (!result.isEmpty())
+			return res.status(400).json({ errors: result.array() });
 
-    const Saved: ISection = await newSection.save();
+		const section = await createSection_service(data);
 
-    const userId = req.user.id;
+		if (!section) throw new Error("Error al crear la Sección");
 
-    const filterData = {
-      id: Saved.id,
-      title: Saved.title,
-      order: Saved.order,
-    };
+		// todo: bitacora
+		// const userId = req.user.id;
 
-    await createElement("createSection", "create", userId, filterData);
-    res.json({
-      message: "Sección Guardada",
-      data: {
-        ...JSON.parse(JSON.stringify(Saved))
-      },
-    });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-    console.log(error)
-  }
+		// const filterData = {
+		//   id: Saved.id,
+		//   title: Saved.title,
+		//   order: Saved.order,
+		// };
+		// await createElement("createSection", "create", userId, filterData);
+		return res.json({
+			message: "Sección Guardada",
+			data: section,
+		});
+	} catch (error: any) {
+		console.log(error);
+
+		return res.status(500).json({ error: true, message: error.message });
+	}
 };
 
-export const sections = async (_req: Request, res: Response) => {
-  try {
-    const sections = await Section.find();
-    res.status(200).json(sections);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
+export const getSections_controller = async (_req: Request, res: Response) => {
+	try {
+		const sections = await getSections_service();
+
+		return res.status(200).json({ data: sections });
+	} catch (error: any) {
+		return res.status(500).json({ error: true, message: error.message });
+	}
 };
 
-export const section = async (req: Request, res: Response) => {
-  try {
-    const section = await Section.findById(req.params.id);
+export const getSection_controller = async (req: Request, res: Response) => {
+	const { _id } = req.params;
 
-    if (!section) {
-      res.status(400).json({ message: "no se encontro la sección" });
-      return;
-    }
+	try {
+		const section = await getSection_service(_id);
 
-    res.status(200).json(section);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-  }
+		if (!section)
+			return res
+				.status(400)
+				.json({ error: true, message: "no se encontro la sección" });
+
+		return res.status(200).json({ data: section });
+	} catch (error: any) {
+		console.log(error);
+		return res.status(500).json({ message: error.message });
+	}
 };
 
-export const deleteSection = async (req: Request, res: Response) => {
-  try {
-    const section = await Section.findById(req.params.id);
-    const classes = await Class.find({ section_id: section?.id });
+export const updateSection_controller = async (req: Request, res: Response) => {
+	const { _id } = req.params;
 
-    if (!section) {
-      res.status(400).json({ message: "no se encontro la sección" });
-      return;
-    }
+	const data = matchedData(req) as SectionAttributes;
 
-    console.log(classes)
-    if (classes.length >= 1) {
-      res
-        .status(400)
-        .json({ message: "No se puede eliminar la sección si posee clases" });
-      return;
-    }
+	try {
+		const result = validationResult(req);
 
-    const deletedOrder = section.order;
+		if (result.array().length) {
+			console.log("************ errores de registro ************");
+			console.log(result.array());
+		}
 
-    await Section.updateMany(
-      { order: { $gt: deletedOrder } },
-      { $inc: { order: -1 } }
-    );
+		if (!result.isEmpty())
+			return res.status(400).json({ errors: result.array() });
 
-    await Section.deleteOne({ _id: section._id });
+		const section = await updateSection_service(_id, data);
 
-    res.status(200).json({
-      message: "Sección eliminada correctamente",
-      ...JSON.parse(JSON.stringify(section)),
-    });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-  }
+		if (!section)
+			return res
+				.status(400)
+				.json({ error: true, message: "No se encontro la sección" });
+
+		// const userId = req.user.id;
+
+		// const filterData = {
+		// 	id: section.id,
+		// 	title: req.body.title,
+		// 	order: section.order,
+		// };
+
+		// await createElement("UpdateSection", "update", userId, filterData);
+
+		return res.json({
+			message: "Se actualizo correctamente la sección",
+			data: section,
+		});
+	} catch (error: any) {
+		console.log(error);
+		return res.status(500).json({ error: true, message: error.message });
+	}
 };
 
-export const updateSection = async (req: Request, res: Response) => {
-  try {
-    const section = await Section.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+export const updateSectionToUp_controller = async (
+	req: Request,
+	res: Response
+) => {
+	const { _id } = req.params;
 
-    if (!section) {
-      res.status(400).json({ message: "No se encontro la sección" });
-      return;
-    }
+	try {
+		const result = validationResult(req);
 
-    const userId = req.user.id;
+		if (result.array().length) {
+			console.log("************ errores de registro ************");
+			console.log(result.array());
+		}
 
-    const filterData = {
-      id: section.id,
-      title: req.body.title,
-      order: section.order,
-    };
+		if (!result.isEmpty())
+			return res.status(400).json({ errors: result.array() });
 
-    await createElement("UpdateSection", "update", userId, filterData);
-    res.json({
-      message: "Se actualizo correctamente la sección",
-      data:{
-        ...JSON.parse(JSON.stringify(section))
-      }
-    });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-  }
+		const section = await updateSectionToUp_service(_id);
+
+		if (!section) throw new Error("No se puede realizar esta accion");
+
+		// const userId = req.user.id;
+
+		// const filterData = {
+		// 	id: section.id,
+		// 	title: req.body.title,
+		// 	order: section.order,
+		// };
+
+		// await createElement("UpdateSection", "update", userId, filterData);
+
+		return res.json({
+			message: "Se actualizo correctamente la sección",
+			data: section,
+		});
+	} catch (error: any) {
+		console.log(error);
+		return res.status(500).json({ error: true, message: error.message });
+	}
+};
+
+export const updateSectionToDown_controller = async (
+	req: Request,
+	res: Response
+) => {
+	const { _id } = req.params;
+
+	try {
+		const result = validationResult(req);
+
+		if (result.array().length) {
+			console.log("************ errores de registro ************");
+			console.log(result.array());
+		}
+
+		if (!result.isEmpty())
+			return res.status(400).json({ errors: result.array() });
+
+		const section = await updateSectionToDown_service(_id);
+
+		if (!section) throw new Error("No se puede realizar esta accion");
+
+		// const userId = req.user.id;
+
+		// const filterData = {
+		// 	id: section.id,
+		// 	title: req.body.title,
+		// 	order: section.order,
+		// };
+
+		// await createElement("UpdateSection", "update", userId, filterData);
+
+		return res.json({
+			message: "Se actualizo correctamente la sección",
+			data: section,
+		});
+	} catch (error: any) {
+		console.log(error);
+		return res.status(500).json({ error: true, message: error.message });
+	}
+};
+
+export const deleteSection_controller = async (req: Request, res: Response) => {
+	const { _id } = req.params;
+
+	try {
+		const result = validationResult(req);
+
+		if (result.array().length) {
+			console.log("************ errores de registro ************");
+			console.log(result.array());
+		}
+
+		if (!result.isEmpty())
+			return res.status(400).json({ error: true, errors: result.array() });
+
+		const section = await deleteSection_service(_id);
+
+		return res.status(200).json({
+			message: "Sección eliminada correctamente",
+			data: section,
+		});
+	} catch (error: any) {
+		console.log(error);
+		return res.status(500).json({ error: true, message: error.message });
+	}
 };

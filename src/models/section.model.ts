@@ -1,24 +1,19 @@
-import mongoose, { Document, Schema, model } from "mongoose";
-import Admin from "./admin.model";
+import { Document, Schema, model } from "mongoose";
 
-export interface ISection extends Document {
-  title: string;
-  order: number;
-  created: object;
-}
+import { SectionAttributes } from "../../types";
 
-const sectionSchema = new Schema<ISection>(
-  {
-    title: { type: String, required: true },
-    order: { type: Number, required: true },
-    created: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: Admin,
-    },
-  },
-  { timestamps: true }
+export interface SectionModel
+	extends Document,
+		Omit<SectionAttributes, "_id"> {}
+
+const sectionSchema = new Schema<SectionModel>(
+	{
+		title: { type: String, required: true },
+		order: { type: Number, required: true },
+	},
+	{ timestamps: true }
 );
 
-const Section = model<ISection>("section", sectionSchema);
+const SectionModel = model<SectionModel>("section", sectionSchema);
 
-export default Section;
+export default SectionModel;

@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, model } from "mongoose";
 import Admin from "./admin.model";
-import Section from "./section.model";
+import SectionModel from "./section.model";
 
 export interface IClass extends Document {
   title: string;
@@ -26,7 +26,7 @@ const classSchema = new Schema<IClass>(
     },
     section_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Section
+      ref: SectionModel
     }
   },
   { timestamps: true }
