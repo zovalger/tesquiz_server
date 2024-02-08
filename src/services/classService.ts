@@ -75,6 +75,19 @@ export const getClasses_By_SectionId_service = async (section_id: string) => {
 	}
 };
 
+
+export const getClasses_By_SectionId_with_complete_service = async (section_id: string) => {
+	try {
+		const classes = await ClassModel.find({ section_id }).sort({ order: 1 });
+
+		return classes;
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+};
+
+
 export const updateClass_service = async (
 	_id: string,
 	data: ClassAttributes

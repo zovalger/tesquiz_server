@@ -1,6 +1,9 @@
 import { SectionAttributes, SectionAttributes_create } from "../../types";
 import SectionModel from "../models/section.model";
-import { getClasses_By_SectionId_service } from "./classService";
+import {
+	getClasses_By_SectionId_service,
+	getClasses_By_SectionId_with_complete_service,
+} from "./classService";
 
 export const getNextNumberOfSection_service = async (): Promise<number> => {
 	try {
@@ -38,6 +41,24 @@ export const getSections_service = async () => {
 		const sections = await SectionModel.find().sort({ order: 1 });
 
 		return sections;
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+};
+
+export const getSections_with_Classes_service = async () => {
+	try {
+		const sections = await SectionModel.find().sort({ order: 1 });
+
+		const sectionsWithClasses = await Promise.all(
+			sections.map(async (s) => ({
+				section: s,
+				classes: await getClasses_By_SectionId_with_complete_service(s._id),
+			}))
+		);
+
+		return sectionsWithClasses;
 	} catch (error) {
 		console.log(error);
 		return;

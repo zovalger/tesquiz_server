@@ -7,6 +7,7 @@ import {
 	updateClassToDown_controller,
 	updateClassToUp_controller,
 	updateClass_controller,
+	deleteClass_controller,
 } from "../controllers/class.controller";
 import { classDataValidator } from "../validators/classValidator";
 
@@ -29,6 +30,6 @@ router.put("/:section_id/classes/:_id/up", updateClassToUp_controller);
 router.put("/:section_id/classes/:_id/down", updateClassToDown_controller);
 
 // todo: todas las secciones con sus clases
-// router.get("/:section_id/classes", getSection_controller);
+router.get("/:section_id/classes/:_id", deleteClass_controller);
 
 export default router;

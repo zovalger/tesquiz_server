@@ -55,9 +55,22 @@ export const getQuizzes_By_ClassId_service = async (class_id: string) => {
 
 export const getRandomQuizzes_By_ClassId_service = async (class_id: string) => {
 	try {
-		const quizzes = await QuizModel.find({ class_id, $sample: { size: 3 } });
+		const quizzes = await getQuizzes_By_ClassId_service(class_id);
 
-		return quizzes;
+		if (!quizzes) return;
+
+		const indexToSelect: number[] = [];
+
+		for (let i = 0; i < 5; i++) {
+			const numberRounded = Math.floor(Math.random() * quizzes.length);
+
+			if (!indexToSelect.includes(numberRounded))
+				indexToSelect.push(numberRounded);
+		}
+
+		const randomQuizzes = indexToSelect.map((m) => quizzes[m]);
+
+		return randomQuizzes;
 	} catch (error) {
 		console.log(error);
 		return;

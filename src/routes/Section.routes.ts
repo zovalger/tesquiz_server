@@ -6,6 +6,7 @@ import {
 	deleteSection_controller,
 	getSection_controller,
 	getSections_controller,
+	getSections_with_Classes_controller,
 	updateSectionToDown_controller,
 	updateSectionToUp_controller,
 	updateSection_controller,
@@ -16,6 +17,7 @@ import { sectionTitleValidator } from "../validators/sectionValidator";
 const router = Router();
 
 router.get("/", getSections_controller);
+router.get("/with_clases", getSections_with_Classes_controller);
 
 router.post(
 	"/",

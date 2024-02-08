@@ -10,6 +10,7 @@ import {
 	deleteSection_service,
 	getSection_service,
 	getSections_service,
+	getSections_with_Classes_service,
 	updateSectionToDown_service,
 	updateSectionToUp_service,
 	updateSection_service,
@@ -56,6 +57,17 @@ export const createSection_controller = async (req: Request, res: Response) => {
 export const getSections_controller = async (_req: Request, res: Response) => {
 	try {
 		const sections = await getSections_service();
+
+		return res.status(200).json({ data: sections });
+	} catch (error: any) {
+		return res.status(500).json({ error: true, message: error.message });
+	}
+};
+
+
+export const getSections_with_Classes_controller = async (_req: Request, res: Response) => {
+	try {
+		const sections = await getSections_with_Classes_service();
 
 		return res.status(200).json({ data: sections });
 	} catch (error: any) {
