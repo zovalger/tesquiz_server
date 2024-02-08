@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { ClassAttributes, ClassAttributes_create } from "../../types";
 import ClassModel from "../models/class.model";
+import { deleteQuizzes_By_ClassId_service } from "./quizService";
 
 export const getNextNumberOfClass_service = async (
 	section_id: string | ObjectId
@@ -177,6 +178,8 @@ export const deleteClass_service = async (_id: string) => {
 
 		const deletedOrder = order;
 		// todo: eliminar quizes
+
+		await deleteQuizzes_By_ClassId_service(_id);
 
 		await ClassModel.updateMany(
 			{ order: { $gt: deletedOrder }, section_id },

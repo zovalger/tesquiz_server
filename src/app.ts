@@ -5,7 +5,7 @@ import morgan from "morgan";
 
 import SectionRoute from "./routes/Section.routes";
 import ClassRoute from "./routes/Class.routes";
-// import QuizRoute from "./routes/Quiz.routes";
+import QuizRoute from "./routes/Quiz.routes";
 // import StudentRoute from "./routes/Student.routes";
 // import AdminRoute from "./routes/Admin.routes";
 // import UsersRoute from "./routes/UsersF.routes";
@@ -35,7 +35,7 @@ app.get("/", (_req, res) => {
 
 app.use("/api/sections", ClassRoute);
 app.use("/api/sections", SectionRoute);
-// app.use("/api", QuizRoute);
+app.use("/api/classes", QuizRoute);
 
 // app.use("/api", StudentRoute);
 // app.use("/api", AdminRoute);

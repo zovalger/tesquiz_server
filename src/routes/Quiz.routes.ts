@@ -1,18 +1,21 @@
 import { Router } from "express";
+import {
+	createQuiz_controller,
+	deleteQuiz_controller,
+	getQuizzes_By_ClassId_controller,
+	getRandomQuizzes_By_ClassId_controller,
+	updateQuiz_controller,
+} from "../controllers/quiz.controller";
 
-import { authRequired } from "../middlewares/validateToken";
-import { AuthClassPermission } from "../services/classServicesssss";
-
-import { createQuiz, quizzes } from "../controllers/quiz.controller";
-
-import { createQuizValidator } from "../validators/quizValidator";
+import { QuizDataValidator } from "../validators/quizValidator";
 
 const router = Router();
 
+router.get("/:class_id/quizzes", getQuizzes_By_ClassId_controller);
+router.get("/:class_id/quizzes/random", getRandomQuizzes_By_ClassId_controller);
 
-router.post('/quizzes', authRequired, createQuizValidator, AuthClassPermission, createQuiz)
+router.post("/:class_id/quizzes", QuizDataValidator, createQuiz_controller);
+router.put("/:class_id/quizzes/:_id", QuizDataValidator, updateQuiz_controller);
+router.delete("/:class_id/quizzes/:_id", deleteQuiz_controller);
 
-router.get('/quizzes/:id', authRequired, quizzes)
-
-
-export default router
+export default router;

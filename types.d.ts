@@ -48,3 +48,14 @@ export interface ClassAttributes {
 }
 
 export interface ClassAttributes_create extends Omit<ClassAttributes, "_id"> {}
+
+export interface QuizAttributes {
+	_id: string;
+	question: string;
+	correct: string[];
+	incorrect: string[];
+	timer: number;
+	class_id: string;
+}
+
+export interface QuizAttributes_create extends Omit<QuizAttributes, "_id"> {}
