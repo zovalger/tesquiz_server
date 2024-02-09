@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config";
 
-import Admin from "../models/admin.model";
+import AdminModel from "../models/admin.model";
 import Student from '../models/student.model';
 
 export const logout = async (_req: Request, res: Response ) => {
@@ -26,7 +26,7 @@ export const logout = async (_req: Request, res: Response ) => {
   export const profile = async (req: Request, res: Response) => {
     try {
 
-      const AdminFound = await Admin.findById(req.user.id);
+      const AdminFound = await AdminModel.findById(req.user.id);
 
       const StudentFound = await Student.findById(req.user.id) 
 
@@ -73,7 +73,7 @@ export const logout = async (_req: Request, res: Response ) => {
         return
       }
 
-      const AdminFound = await Admin.findById(user.id);
+      const AdminFound = await AdminModel.findById(user.id);
       const StudentFound = await Student.findById(user.id) 
 
       const userFound = AdminFound?.role == "Admin" ? AdminFound : StudentFound?.role == "Student" ? StudentFound : null

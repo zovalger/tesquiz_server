@@ -1,6 +1,6 @@
 import { Roles, TypeText } from "./enums";
 
-export interface userData {
+export interface userAttributes {
 	_id: string;
 	firstName: string;
 	lastName: string;
@@ -8,15 +8,19 @@ export interface userData {
 	email: string;
 	password: string;
 	role: Roles;
-	token: string;
 }
 
-export interface StudentUserData extends userData {}
+export interface loginData extends Pick<userAttributes,"email"|"password">{}
 
-export interface AdminUserData extends userData {
-	permissions: Array<String>;
+export interface StudentUserAttributes extends userAttributes {}
+
+export interface AdminUserAttributes extends userAttributes {
+	permissions: String[];
 }
 
+export interface AdminUserAttributes_create extends AdminUserAttributes {
+	repeatPassword: string;
+}
 export interface RegisterStudentData {
 	firstName: string;
 	lastName: string;

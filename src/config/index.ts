@@ -10,4 +10,4 @@ export const MONGODB_URI =
 	"mongodb://127.0.0.1/test";
 
 
-export const TOKEN_SECRET = process.env.TOKEN
+export const TOKEN_SECRET = process.env.TOKEN || ""

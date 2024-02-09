@@ -1,15 +1,27 @@
 import { Router } from "express";
-
-import { registerAdmin, loginAdmin } from "../controllers/admin.controller";
-import { loginAdminValidator, registerAdminValidator } from "../validators/adminValidator";
-
-import { authRequired } from "../middlewares/validateToken";
-import { AuthAdminPermissions } from "../services/adminService";
+import { authLoginValidator } from "../validators/authValidator";
+import {
+	createAdmin_controller,
+	deleteAdmin_controller,
+	getAdmin_By_Id_controller,
+	getAdmins_controller,
+	loginAdmin_controller,
+	updateAdmin_controller,
+} from "../controllers/admin.controller";
+import {
+	AdminDataValidator,
+	registerAdminValidator,
+} from "../validators/adminValidator";
 
 const router = Router();
 
-router.post('/registerAdmin',authRequired, registerAdminValidator, AuthAdminPermissions, registerAdmin );
-router.post('/loginAdmin', loginAdminValidator, loginAdmin )
+router.post("/register", registerAdminValidator, createAdmin_controller);
+router.post("/login", authLoginValidator, loginAdmin_controller);
 
+router.get("/", getAdmins_controller);
+router.get("/:_id", getAdmin_By_Id_controller);
 
-export default router
+router.put("/:_id", AdminDataValidator, updateAdmin_controller);
+router.delete("/:_id", deleteAdmin_controller);
+
+export default router;

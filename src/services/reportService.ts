@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import Admin, { IAdmin } from "../models/admin.model";
+import AdminModel, { AdminModel } from "../models/admin.model";
 
 export const AuthReportClassPermission = async (
   req: Request,
@@ -9,7 +9,7 @@ export const AuthReportClassPermission = async (
   try {
     const loggedInUserId = req.user?.id;
 
-    const isAdmin: IAdmin | null = await Admin.findById(loggedInUserId);
+    const isAdmin: AdminModel | null = await AdminModel.findById(loggedInUserId);
 
     if (!isAdmin) {
       res.status(400).json({ message: "Usuario no autorizado" });

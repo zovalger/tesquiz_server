@@ -6,8 +6,8 @@ import morgan from "morgan";
 import SectionRoute from "./routes/Section.routes";
 import ClassRoute from "./routes/Class.routes";
 import QuizRoute from "./routes/Quiz.routes";
+import AdminRoute from "./routes/Admin.routes";
 // import StudentRoute from "./routes/Student.routes";
-// import AdminRoute from "./routes/Admin.routes";
 // import UsersRoute from "./routes/UsersF.routes";
 // import Report from "./routes/ReportClass.routes";
 // import ClassFinishied from "./routes/ClassFinishied.routes";
@@ -37,9 +37,10 @@ app.use("/api/sections", ClassRoute);
 app.use("/api/sections", SectionRoute);
 app.use("/api/classes", QuizRoute);
 
-// app.use("/api", StudentRoute);
-// app.use("/api", AdminRoute);
-// app.use("/api", UsersRoute);
+app.use("/api/user/admin", AdminRoute);
+// app.use("/api/user/student", StudentRoute);
+// app.use("/api/user", UsersRoute);
+
 // app.use("/api", Report);
 // app.use("/api", ClassFinishied);
 

@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, model } from "mongoose";
-import Admin from "./admin.model";
+import AdminModel from "./admin.model";
 
 export interface Ilogbook extends Document {
   place: string;
@@ -14,7 +14,7 @@ const logbookSchema = new Schema<Ilogbook>(
     type: { type: String, required: true },
     by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Admin,
+      ref: AdminModel,
     },
     object: { type: Object, required: true}
   },
